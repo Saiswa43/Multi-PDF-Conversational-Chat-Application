@@ -57,7 +57,7 @@ assignment-main/
 
 Generated folders such as `venv/`, `node_modules/`, `__pycache__/`, and `.streamlit/` are ignored by Git.
 
-## How It Works
+## Project Flow
 
 1. The user uploads one or more documents from the frontend.
 2. The frontend sends the files to the FastAPI `/upload` endpoint.
@@ -70,71 +70,87 @@ Generated folders such as `venv/`, `node_modules/`, `__pycache__/`, and `.stream
 9. The retrieved chunks are sent as context to the Hugging Face LLM.
 10. The model returns an answer based only on the uploaded documents.
 
-## Backend API
+## Application Behavior
 
-### `GET /health`
+### 1. Document Upload
 
-Checks whether the backend is running.
+The user uploads PDF, DOCX, or TXT files from the sidebar. These files become the knowledge base for the chatbot. The backend extracts text from each file and prepares it for semantic search.
 
-Response:
+### 2. Text Processing
 
-```json
-{
-  "status": "ok"
-}
-```
+The extracted document text is cleaned by removing unnecessary short lines, headings, extra spaces, and repeated line breaks. The cleaned content is then divided into smaller overlapping chunks so that the chatbot can retrieve accurate context for each question.
 
-### `POST /upload`
+### 3. Vector Embedding and Storage
 
-Uploads and indexes documents.
+Each text chunk is converted into a numerical embedding using the `sentence-transformers/all-mpnet-base-v2` model. These embeddings are stored in a FAISS vector index, which helps the application quickly find the most relevant document sections for a user query.
 
-Limits configured in `api.py`:
+### 4. User Question
 
-- Maximum files: `5`
+When the user asks a question, the question is also converted into an embedding. FAISS compares the question embedding with the stored document embeddings and retrieves the most similar chunks.
+
+### 5. Answer Generation
+
+The retrieved chunks are passed as context to the Hugging Face Llama model. The prompt instructs the model to answer only from the uploaded documents. This helps reduce unrelated or unsupported answers.
+
+### 6. Source Display
+
+The frontend displays the generated answer along with the source file names used to answer the question. This makes the response easier to verify.
+
+## Response Handling
+
+The chatbot handles different query situations:
+
+- Greeting messages such as `hi`, `hello`, and `hey` receive a friendly response.
+- If documents are uploaded, greetings confirm that the knowledge base is ready.
+- If no documents are uploaded, the chatbot asks the user to upload documents first.
+- If the question is related to the uploaded documents, the chatbot gives a document-based answer.
+- If the question is not related to the uploaded documents, the chatbot replies that the question is not related to the uploaded content.
+- If the answer is not present in the retrieved context, the chatbot says that the information is not available in the provided documents.
+
+## Upload Limits
+
+The backend includes upload limits to keep document processing fast and controlled:
+
+- Maximum number of files per upload: `5`
 - Maximum file size: `5 MB` per file
-- Supported extensions: `.pdf`, `.docx`, `.txt`
+- Supported file types: `.pdf`, `.docx`, `.txt`
 
-Response example:
+If the user uploads more than 5 files, uploads a file larger than 5 MB, or uploads a file that cannot be processed, the application returns an error message instead of indexing the file.
 
-```json
-{
-  "status": "success",
-  "total_chunks": 12,
-  "added_chunks": 12
-}
+## Demo Screenshots
+
+Add your project screenshots to a folder named `screenshots/` and update the image paths below.
+
+### Home Page
+
+Shows the initial chat interface before uploading documents.
+
+```md
+![Home Page](screenshots/home-page.png)
 ```
 
-### `POST /query`
+### Greeting Response
 
-Sends a user question to the chatbot.
+Shows how the chatbot responds to greetings like `hi`.
 
-Request body:
-
-```json
-{
-  "query": "What is this document about?"
-}
+```md
+![Greeting Response](screenshots/greeting-response.png)
 ```
 
-Response example:
+### Relevant Document Answer
 
-```json
-{
-  "answer": "The document explains...",
-  "sources": ["example.pdf"]
-}
+Shows the chatbot answering a question using information from uploaded documents.
+
+```md
+![Relevant Answer](screenshots/relevant-answer.png)
 ```
 
-### `POST /clear`
+### Information Not Present
 
-Clears the current in-memory knowledge base and FAISS index.
+Shows the chatbot response when the requested information is not available in the uploaded documents.
 
-Response:
-
-```json
-{
-  "status": "success"
-}
+```md
+![Information Not Present](screenshots/info-not-present.png)
 ```
 
 ## Setup Instructions
@@ -283,4 +299,4 @@ meta-llama/Meta-Llama-3-8B-Instruct
 
 ## License
 
-This project is for educational and assignment purposes.
+No license has been added to this repository yet.
