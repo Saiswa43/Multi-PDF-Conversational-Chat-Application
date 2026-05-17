@@ -236,6 +236,82 @@ The Vite development server proxies `/api` requests to `http://localhost:8000`, 
 5. Ask questions in the chat input.
 6. Use `Clear Knowledge Base` to remove uploaded document context.
 
+## Deployment
+
+This project has two parts, so deploy them separately:
+
+- Deploy the FastAPI backend on a backend hosting platform such as Render.
+- Deploy the React/Vite frontend on a frontend hosting platform such as Vercel.
+
+### 1. Deploy Backend on Render
+
+1. Push the latest code to GitHub.
+2. Go to Render and create a new `Web Service`.
+3. Connect the GitHub repository.
+4. Use the following backend settings:
+
+```text
+Root Directory: .
+Build Command: pip install -r requirements.txt
+Start Command: uvicorn api:app --host 0.0.0.0 --port $PORT
+```
+
+5. Add the environment variable:
+
+```text
+HF_API_KEY = your_huggingface_api_key_here
+```
+
+6. Deploy the service.
+7. After deployment, copy the backend URL. It will look similar to:
+
+```text
+https://your-backend-name.onrender.com
+```
+
+You can test the backend by opening:
+
+```text
+https://your-backend-name.onrender.com/health
+```
+
+### 2. Deploy Frontend on Vercel
+
+1. Go to Vercel and create a new project.
+2. Import the same GitHub repository.
+3. Set the frontend root directory as:
+
+```text
+frontend
+```
+
+4. Use these build settings:
+
+```text
+Framework Preset: Vite
+Build Command: npm run build
+Output Directory: dist
+```
+
+5. Add this environment variable in Vercel:
+
+```text
+VITE_API_BASE_URL = https://your-backend-name.onrender.com
+```
+
+6. Deploy the frontend.
+
+After deployment, open the Vercel URL and test document upload and chat responses.
+
+### Deployment Notes
+
+- The backend must be deployed before the frontend, because the frontend needs the backend URL.
+- Do not add `.streamlit/secrets.toml` to GitHub.
+- Add the Hugging Face key as a hosting environment variable instead.
+- The frontend uses `VITE_API_BASE_URL` in production and `/api` during local development.
+- Render free services may take some time to wake up after inactivity.
+- The backend loads the embedding model on startup, so the first request may be slower.
+
 ## Important Notes
 
 - The FAISS index and uploaded document chunks are stored in memory only.

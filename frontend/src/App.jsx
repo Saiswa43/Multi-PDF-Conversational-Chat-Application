@@ -3,6 +3,8 @@ import { Send, FileText, Bot, User, Loader2, Sparkles, Plus, Trash2 } from 'luci
 import { motion } from 'framer-motion'
 import ReactMarkdown from "react-markdown";
 
+const API_BASE_URL = (import.meta.env.VITE_API_BASE_URL || '/api').replace(/\/$/, '')
+
 function App() {
   const [messages, setMessages] = useState([
     { id: 1, role: 'ai', content: 'Welcome to Nexus RAG. Upload your knowledge base to begin.' }
@@ -29,7 +31,7 @@ function App() {
     selectedFiles.forEach(file => formData.append('files', file))
 
     try {
-      const response = await fetch('/api/upload', {
+      const response = await fetch(`${API_BASE_URL}/upload`, {
         method: 'POST',
         body: formData,
       })
@@ -63,7 +65,7 @@ function App() {
     setIsQuerying(true)
 
     try {
-      const response = await fetch('/api/query', {
+      const response = await fetch(`${API_BASE_URL}/query`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: input }),
@@ -89,7 +91,7 @@ function App() {
   }
 
   const handleClear = async () => {
-    await fetch('/api/clear', { method: 'POST' })
+    await fetch(`${API_BASE_URL}/clear`, { method: 'POST' })
     setFiles([])
     setMessages(prev => [...prev, { id: Date.now(), role: 'ai', content: 'Knowledge base cleared.' }])
   }
