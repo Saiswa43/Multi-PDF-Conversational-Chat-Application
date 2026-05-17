@@ -119,39 +119,23 @@ If the user uploads more than 5 files, uploads a file larger than 5 MB, or uploa
 
 ## Demo Screenshots
 
-Add your project screenshots to a folder named `screenshots/` and update the image paths below.
-
-### Home Page
+### Initial State
 
 Shows the initial chat interface before uploading documents.
 
-```md
-![Home Page](screenshots/home-page.png)
-```
+![Initial State](screenshots/initial-state.png)
 
 ### Greeting Response
 
 Shows how the chatbot responds to greetings like `hi`.
 
-```md
-![Greeting Response](screenshots/greeting-response.png)
-```
+![Greeting Response](screenshots/greetings-query.png)
 
-### Relevant Document Answer
+### Document-Based Answer
 
 Shows the chatbot answering a question using information from uploaded documents.
 
-```md
-![Relevant Answer](screenshots/relevant-answer.png)
-```
-
-### Information Not Present
-
-Shows the chatbot response when the requested information is not available in the uploaded documents.
-
-```md
-![Information Not Present](screenshots/info-not-present.png)
-```
+![Document Query](screenshots/document-query.png)
 
 ## Setup Instructions
 
