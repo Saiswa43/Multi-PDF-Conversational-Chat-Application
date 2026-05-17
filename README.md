@@ -82,7 +82,7 @@ The extracted document text is cleaned by removing unnecessary short lines, head
 
 ### 3. Vector Embedding and Storage
 
-Each text chunk is converted into a numerical embedding using the `sentence-transformers/all-mpnet-base-v2` model. These embeddings are stored in a FAISS vector index, which helps the application quickly find the most relevant document sections for a user query.
+Each text chunk is converted into a numerical embedding using the `sentence-transformers/all-MiniLM-L6-v2` model. These embeddings are stored in a FAISS vector index, which helps the application quickly find the most relevant document sections for a user query.
 
 ### 4. User Question
 
@@ -337,7 +337,7 @@ MAX_FILE_SIZE_MB = 5
 The embedding model used is:
 
 ```text
-sentence-transformers/all-mpnet-base-v2
+sentence-transformers/all-MiniLM-L6-v2
 ```
 
 The LLM configured through Hugging Face is:

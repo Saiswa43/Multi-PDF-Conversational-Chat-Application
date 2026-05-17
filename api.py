@@ -44,7 +44,7 @@ client = InferenceClient(
 )
 
 # ---------------- EMBEDDING MODEL ----------------
-embedding_model = SentenceTransformer("sentence-transformers/all-mpnet-base-v2")
+embedding_model = SentenceTransformer("sentence-transformers/all-MiniLM-L6-v2")
 
 # ---------------- STATE ----------------
 all_chunks = []
