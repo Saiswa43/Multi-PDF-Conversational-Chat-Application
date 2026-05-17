@@ -1,0 +1,9 @@
+fastapi
+uvicorn
+numpy
+faiss-cpu
+pymupdf
+python-docx
+sentence-transformers
+huggingface_hub
+toml
